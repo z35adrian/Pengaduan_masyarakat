@@ -31,6 +31,14 @@
                     <input id="nama" type="text" name="nama" required>
                 </div>
                 <div class="input_field">
+                    <label for="nik">NIK</label>
+                    <input id="nik" type="text" name="nik" required>
+                </div>
+                <div class="input_field">
+                    <label for="telp">No Telepon</label>
+                    <input id="telp" type="text" name="telp" required>
+                </div>               
+                <div class="input_field">
                     <label for="password">Passowrd</label>
                     <input id="password" type="password" name="password" required>
                 </div>
