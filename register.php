@@ -21,37 +21,60 @@
         <h3 style="text-align: center;" class="orange-text">Daftar!</h3>
         <center><h4>Laporan Masyarakat</h4></center>
 
-            <form method="POST">
+  <form method="POST">
                 <div class="input_field">
-                    <label for="username">Username</label>
-                    <input id="username" type="text" name="username" required>
+                    <label for="nik">NIK</label>
+                    <input id="nik" type="text" name="nik" maxlength="16" required>
                 </div>
                 <div class="input_field">
                     <label for="nama">Nama</label>
-                    <input id="nama" type="text" name="nama" required>
+                    <input id="nama" type="text" name="nama" maxlength="35" required>
                 </div>
                 <div class="input_field">
-                    <label for="nik">NIK</label>
-                    <input id="nik" type="text" name="nik" required>
+                    <label for="username">Username</label>
+                    <input id="username" type="text" name="username" maxlength="25" required>
                 </div>
                 <div class="input_field">
                     <label for="telp">No Telepon</label>
-                    <input id="telp" type="text" name="telp" required>
-                </div>               
+                    <input id="telp" type="text" name="telp" maxlength="13" required>
+                </div>
                 <div class="input_field">
-                    <label for="password">Passowrd</label>
+                    <label for="password">Password</label>
                     <input id="password" type="password" name="password" required>
                 </div>
-                <input type="submit" name="login" value="daftar" class="btn orange" style="width: 100%;">
+                <input type="submit" name="register" value="Daftar" class="btn orange" style="width: 100%;">
             </form>
-            <p>Sudah punya akun ? <a href="index.php">Log In Disini</a></p>
+            <p>Sudah punya akun? <a href="index.php">Log In Disini</a></p>
         </div>
     </div>
 
-<?php 
-	
-    
+    <?php 
+$koneksi = new mysqli("localhost", "root", "", "pengaduan_masyarakat");
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+    $nik = $koneksi->real_escape_string($_POST['nik']);
+    $nama = $koneksi->real_escape_string($_POST['nama']);
+    $username = $koneksi->real_escape_string($_POST['username']);
+    $telp = $koneksi->real_escape_string($_POST['telp']);
+    $password = md5($_POST['password']); 
 
-    
- ?>
- </body>
+    $cek_user = $koneksi->query("SELECT * FROM masyarakat WHERE username='$username' OR nik='$nik'");
+    if ($cek_user->num_rows > 0) {
+        echo "<script>alert('NIK atau Username sudah terdaftar!');</script>";
+    } else {
+        $sql = "INSERT INTO masyarakat (nik, nama, username, password, telp) 
+                VALUES ('$nik', '$nama', '$username', '$password', '$telp')";
+
+        if ($koneksi->query($sql) === TRUE) {
+            echo "<script>alert('Registrasi berhasil! Silakan login.');</script>";
+            echo "<script>window.location.href = 'index.php';</script>";
+        } else {
+            echo "<script>alert('Error: " . $koneksi->error . "');</script>";
+        }
+    }
+}
+$koneksi->close();
+?>
+</body>
